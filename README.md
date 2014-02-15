@@ -1,0 +1,4 @@
+msupervisor
+===========
+
+Multiserver supervisor frontend
