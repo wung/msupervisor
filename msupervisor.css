@@ -1,0 +1,217 @@
+/* Reset
+------------------------------------------------------------------------- */
+
+/* Based on http://meyerweb.com/eric/tools/css/reset/ */
+/* v1.0 | 20080212 */
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p,
+blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em,
+font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b,
+u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table,
+caption, tbody, tfoot, thead, tr, th, td {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+
+ol, ul { list-style: none; }
+
+blockquote, q { quotes: none; }
+
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+
+:focus { outline: 0; }
+
+ins { text-decoration: none; }
+
+del { text-decoration: line-through; }
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+a { outline: none; }
+
+
+/* General
+-------------------------------------------------------------------------*/
+
+body {
+    font: 10px Helvetica,arial,freesans,clean,sans-serif;
+    line-height: 1.4;
+    margin: 0 0 105px;
+    background-color: #ffffff;
+    color: #2e3436;
+}
+
+
+.header{
+    margin-top: 10px;
+    margin-bottom: 30px;
+    font-size: 30px;
+    font-weight: bold;
+    color: #3465a4;
+    border-bottom: 2px solid #babdb6;
+
+}
+
+.footer {
+    width: 100%;
+    background-color: #eeeeec;
+    color: #babdb6;
+    position: fixed;
+    bottom: 0;
+    text-align: center;
+}
+
+a:hover {
+    color: #729fcf;
+}
+
+a {
+    text-decoration: none;
+    color: #204a87;
+}
+
+a:visited {
+    color: #204a87;
+}
+
+.container {
+    width: 782px;
+    margin: auto;
+}
+
+.server_name{
+    padding-top:20px;
+    color: #2e3436;
+    font-size: 30px;
+    font-weight:bold;
+}
+
+.server_actions {
+    font-family: monospace;
+    color: #babdb6;
+    padding-bottom: 10px;
+}
+
+.groupline {
+    font-weight: bold;
+    background-color: #babdb6;
+}
+
+.nogroupline {
+    font-weight: bold;
+    background-color: #babdb6;
+}
+
+.groupactions {
+    text-align: right;
+    font-weight: normal;
+}
+
+table {
+    font-family: monospace;
+    width:100%;
+    margin-top: 10px;
+    border: 1px solid #babdb6;
+}
+
+th {
+    font-family: Helvetica,arial,freesans,clean,sans-serif;
+    background-color: #babdb6;
+    padding: 5px;
+
+}
+
+td, th {
+    text-align: left;
+    white-space:nowrap;
+    padding: 5px;
+
+}
+
+.line0 {
+    background: #eeeeec;
+    padding: 5px;
+}
+
+.line1 {
+    padding: 5px;
+}
+
+.state {
+    width: 50px;
+}
+
+.action {
+    text-align: right;
+}
+
+.description {
+    white-space:normal;
+}
+
+.description span {
+    font-size: 10px;
+}
+
+.name {
+    font-weight: bold;
+    width: 90px;
+}
+
+.state span{
+
+    width: 100%;
+    text-align: center;
+}
+
+.RUNNING, .msg_success {
+    background: #8ae234;
+}
+
+.STOPPED, .msg_warning{
+    background: #fce94f;
+}
+
+.BACKOFF, .FATAL, .msg_error {
+    background: #ef2929;
+}
+
+.msg_info {
+    background: #729fcf;
+}
+
+.offline_server_section {
+    padding-top:20px;
+    padding-bottom: 14;
+    font-weight: bold;
+    color: #cc0000;
+    font-size: 30px;
+}
+
+.offline_server_name {
+    width:100px;
+}
+
+.msg_box {
+    font-family: monospace;
+    border: 1px solid #babdb6;
+    margin-bottom: 20px;
+}
+
+.process_container {
+    padding: 10px;
+    padding-top: 0px;
+    border: 1px dotted #babdb6;
+}
