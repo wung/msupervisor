@@ -188,13 +188,13 @@ td, th {
     background: #ef2929;
 }
 
-.msg_info {
+.STARTING .msg_info {
     background: #729fcf;
 }
 
 .offline_server_section {
     padding-top:20px;
-    padding-bottom: 14;
+    padding-bottom: 14px;
     font-weight: bold;
     color: #cc0000;
     font-size: 30px;

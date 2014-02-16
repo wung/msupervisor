@@ -26,8 +26,11 @@
 header = """
 <!DOCTYPE html>
 <html>
+<head>
 <title>mSupervisor</title>
+<meta charset="utf-8">
 <link href="%s" rel="stylesheet" type="text/css" />
+</head>
 <body>
 <div class="container">
 <div class="header">mSupervisor</div>
@@ -64,7 +67,7 @@ footer = """
 # process supervisor name
 # requires: name, name, system_version, server_actions
 supervisor_name = """
-<div class="server_name" name="%s">%s</div>
+<div class="server_name" id="%s">%s</div>
 <div class="server_actions">%s %% %s</div>
 <div class="process_container">
 """
