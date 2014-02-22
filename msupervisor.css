@@ -215,3 +215,7 @@ td, th {
     padding-top: 0px;
     border: 1px dotted #babdb6;
 }
+
+pre {
+    white-space:normal;
+}
