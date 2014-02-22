@@ -23,52 +23,24 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ########################################################################
 
-import xmlrpclib, ConfigParser, sys, socket
+import xmlrpclib, ConfigParser, sys, socket, argparse
 from wsgiref.simple_server import make_server
 from wsgiref.util import shift_path_info
 from cgi import parse_qs, escape
 from datetime import datetime, timedelta
 import htemplate
 
-_version = 0.1
+_version = "0.2"
 
-# Variable initalization
-config = ConfigParser.ConfigParser()
-servers = []
-config_file = "msupervisor.ini"
-messages = []
-server_num = 0
-
-# Load config file
-try:
-    config.read(config_file)
-    servers = config.items("servers")
-    css_file = config.get('config','stylesheet')
-    
-except:
-    messages.append(("error", "Error loading config file: %s"%(config_file)))
-
-# Connect to servers
-
-server_list = []
-servers_offline = []
-
-for i in servers:
-    
-    try:
-        x = xmlrpclib.Server(i[1])
-        x.supervisor.getState()
-        server_list.append((server_num, i[0], x))
-        server_num = server_num + 1
-    except xmlrpclib.ProtocolError, e:
-        servers_offline.append((i[0], "Unauthorized %s" %(e)))
-    except socket.gaierror, e:
-        servers_offline.append((i[0], "%s" %(e)))
-    except socket.error, e:
-        servers_offline.append((i[0], "%s" %(e)))
-    except e:
-        servers_offline.append((i[0], "Unexpected error: %s" %(e)))
-
+# parse args
+parser = argparse.ArgumentParser(description='Frontend for multiple supervisor instances')
+parser.add_argument('--version', action='version', version=_version)
+parser.add_argument('--config', dest='config_file', action='store',
+                    default="msupervisor.ini", help='path of the config file')
+parser.add_argument('--server', dest='server', action='store',
+                    default="localhost", help='server adress')
+parser.add_argument('--port',type=int, dest='port', action='store',
+                    default=8051, help='server port')
 
 def secondsToDHMS(seconds):
     days = str(seconds // (3600 * 24))
@@ -83,6 +55,7 @@ def secondsToDHMS(seconds):
         seconds = "0" + seconds
 
     return days, hours, minutes, seconds
+
 
 
 def calcTime(now, start, stop, running):
@@ -121,7 +94,7 @@ def serverOnlineList(server):
         process_list = " "
         system_version = i[2].supervisor.getSupervisorVersion()
         process = i[2].supervisor.getAllProcessInfo()
-        sactions = "[<a href=\"/restart/?svi=%s\">restart all</a>] | [<a href=\"/stop/?svi=%s\">stop all</a>]" %(i[0], i[0])
+        sactions = "[<a href=\"/restart/?svi=%s\">restart all</a>] [<a href=\"/stop/?svi=%s\">stop all</a>]" %(i[0], i[0])
         
         header = htemplate.supervisor_name % (i[1], i[1], system_version, sactions)
                  
@@ -164,7 +137,6 @@ def serverOnlineList(server):
                 
             stop_url = "/stop/?svi=%s&amp;gpi=%s&amp;pci=%s" %(i[0], x["group"], x["name"])
             log_url = "/log/?svi=%s&amp;gpi=%s&amp;pci=%s" %(i[0], x["group"], x["name"])
-            tail_url = "/tail/?svi=%s&amp;gpi=%s&amp;pci=%s" %(i[0], x["group"], x["name"])
             clear_url = "/clear/?svi=%s&amp;gpi=%s&amp;pci=%s" %(i[0], x["group"], x["name"])
 
             # calcule time
@@ -180,7 +152,7 @@ def serverOnlineList(server):
             process_list = process_list + \
                         htemplate.process_list % (line, x["statename"],
                         x["statename"].lower(), x["name"], description, action,
-                        stop_url, log_url, tail_url, clear_url)
+                        stop_url, log_url, clear_url)
 
         online_html = online_html + header + process_list + htemplate.process_finish
 
@@ -261,6 +233,7 @@ def readProcessLog(server_id, group_id, process_id, mode=0):
         log = "<br />".join(raw.split("\n"))
         return log
 
+        
 def clearProcessLog(server_id, group_id, process_id):
     try:
         server_list[int(server_id)][2].supervisor.clearProcessLog((group_id + ":" + process_id))
@@ -325,7 +298,8 @@ def application(environ, start_response):
 
 
     elif (filepath == "log"):
-        response_body = "<pre>" + readProcessLog(server_id, group_id, process_id) + "</pre><p><a href=\"\">Test link</a></p>"
+        response_body = "<pre>" + readProcessLog(server_id, group_id, process_id) + \
+        """ <input type="button" value="Reload Page" onClick="window.location.reload()">"""
         
         status = '200 OK'
         response_headers = [('Content-Type', 'text/html'),
@@ -347,5 +321,51 @@ def application(environ, start_response):
 
 
 # Start server
-httpd = make_server('localhost', 8051, application)
-httpd.serve_forever()
+if __name__ == '__main__':
+    args = parser.parse_args()
+    
+    # Variable initalization
+    server = args.server
+    port = args.port
+    config = ConfigParser.ConfigParser()
+    servers = []
+    config_file = args.config_file
+    messages = []
+    server_num = 0
+    
+    # Load config file
+    try:
+        config.read(config_file)
+        servers = config.items("servers")
+        css_file = config.get('config','stylesheet')
+    
+    except:
+        messages.append(("error", "Error loading config file: %s"%(config_file)))
+
+    # Connect to servers
+
+    server_list = []
+    servers_offline = []
+
+    for i in servers:
+        try:
+            x = xmlrpclib.Server(i[1])
+            x.supervisor.getState()
+            server_list.append((server_num, i[0], x))
+            server_num = server_num + 1
+        except xmlrpclib.ProtocolError, e:
+            servers_offline.append((i[0], "Unauthorized %s" %(e)))
+        except socket.gaierror, e:
+            servers_offline.append((i[0], "%s" %(e)))
+        except socket.error, e:
+            servers_offline.append((i[0], "%s" %(e)))
+        except e:
+            servers_offline.append((i[0], "Unexpected error: %s" %(e)))
+
+    try:
+        httpd = make_server(server, port, application)
+        print "mSupervisor running in http://%s:%s" %(server, port)
+        httpd.serve_forever()
+    except socket.error:
+        print "Cannot assign requested address: %s on port %s" %(server, port)
+

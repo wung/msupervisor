@@ -92,13 +92,13 @@ nogroupline = """
 
 # process list
 # requires: line_color, statename, statename, name,
-#           description, action, stop_url, log_url, tail_url, clear_url
+#           description, action, stop_url, log_url, clear_url
 process_list = """
 <tr class="line%s">
     <td class="state"><span class="%s">%s</span></td>
     <td class="name">%s</td>
     <td class="description">%s</td>
-    <td class="action">[%s] [<a href="%s">stop</a>] [<a href="%s" target="_blank">log</a>] [<a href="%s" target="_blank">tail</a>] [<a href="%s">clearlog</a>]</td>
+    <td class="action">[%s] [<a href="%s">stop</a>] [<a href="%s" target="_blank">log</a>] [<a href="%s">clearlog</a>]</td>
 </tr>
 """ 
 
