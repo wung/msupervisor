@@ -298,8 +298,10 @@ def application(environ, start_response):
 
 
     elif (filepath == "log"):
-        response_body = "<pre>" + readProcessLog(server_id, group_id, process_id) + \
-        """ <input type="button" value="Reload Page" onClick="window.location.reload()">"""
+        response_body = htemplate.header %("../" + css_file) + "<pre>" + \
+        readProcessLog(server_id, group_id, process_id) + \
+        """</pre><input type="button" value="Reload Page" onClick="window.location.reload()">""" + \
+        htemplate.footer %(_version)
         
         status = '200 OK'
         response_headers = [('Content-Type', 'text/html'),
